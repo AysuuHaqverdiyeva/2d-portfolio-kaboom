@@ -20,6 +20,60 @@ k.loadSprite("map", "./map.png");
 k.setBackground(k.Color.fromHex("#311047"));
 
 k.scene("main", async () => {
+  let score = 0;
+
+  const scoreLabel = k.add([
+    k.text("Score: 0", { size: 16 }),
+    k.pos(12, 12),
+    k.fixed(),
+    {
+      value: score,
+      update() {
+        this.text = "Score: " + this.value;
+      }
+    }
+  ]);
+  let progress = 0;
+
+  const progressBar = k.add([
+    k.rect(0, 8),
+    k.pos(12, 40),
+    k.color(0, 255, 0),
+    k.fixed(),
+    {
+      update() {
+        this.width = k.width() * (progress / 100);
+      }
+    }
+  ]);
+  let badges = [];
+
+  function earnBadge(name) {
+    if (!badges.includes(name)) {
+      badges.push(name);
+      k.add([
+        k.text("🏅 New Badge: " + name, { size: 18 }),
+        k.pos(k.width() / 2 - 100, 70),
+        k.fixed(),
+        k.lifespan(3),
+      ]);
+    }
+  }
+
+//   let score = 0;
+
+// const scoreLabel = k.add([
+//   k.text("Score: 0", { size: 16 }),
+//   k.pos(12, 12),
+//   k.fixed(),
+//   {
+//     value: score,
+//     update() {
+//       this.text = "Score: " + this.value;
+//     }
+//   }
+// ]);
+
   const mapData = await (await fetch("./map.json")).json();
   const layers = mapData.layers;
 
@@ -54,15 +108,42 @@ k.scene("main", async () => {
           boundary.name,
         ]);
 
+        // if (boundary.name) {
+        //   player.onCollide(boundary.name, () => {
+        //     player.isInDialogue = true;
+        //     displayDialogue(
+        //       dialogueData[boundary.name],
+        //       () => (player.isInDialogue = false)
+        //     );
+        //   });
+        // }
         if (boundary.name) {
           player.onCollide(boundary.name, () => {
-            player.isInDialogue = true;
-            displayDialogue(
-              dialogueData[boundary.name],
-              () => (player.isInDialogue = false)
-            );
+            if (!player.isInDialogue) {
+              player.isInDialogue = true;
+
+              // Xal artır
+              score += 10;
+              scoreLabel.value = score;
+
+              // Proqress çubuğu artır
+              progress += 10;
+              if (progress > 100) progress = 100;
+
+              // Badge verilir (əgər hələ alınmayıbsa)
+              if (score >= 100 && !badges.includes("Explorer")) {
+                earnBadge("Explorer");
+              }
+
+              // Dialoq göstərilir
+              displayDialogue(
+                dialogueData[boundary.name],
+                () => (player.isInDialogue = false)
+              );
+            }
           });
         }
+        
       }
 
       continue;
