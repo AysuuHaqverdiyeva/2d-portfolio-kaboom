@@ -17,6 +17,6 @@ export const dialogueData = {
   Contact me at aysuhagverdiyeva@gmail.com if you have any interesting job opportunities!`,
   projects: `Info about this portfolio : It's made with the Kaboom.js library which is a library for making games in JavaScript.
   Text is rendered with HTML/CSS. My previous portfolio link: <a href="https://github.com/AysuuHaqverdiyeva/portfolio-website-master" target="_blank">here</a>.`,
-  library: `There are a lot of programming books on my shelves.`,
-  exit: `If you want to exit JSLegendDev's portfolio, just close the tab.`,
+  library: `There are a lot of programming books on my shelves.`,   
+  exit: `If you want to exit Aysu Hagverdiyeva portfolio, just close the tab.`,
 };
